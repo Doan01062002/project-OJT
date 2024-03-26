@@ -117,12 +117,13 @@ https://templatemo.com/tm-583-festava-live
 
                                     <input id="form-control" type="tel" class="form-control" name="ticket-form-phone" placeholder="Ph 033953380" required="">
 
-                                    <h6>Choose Ticket</h6>
+                                    <h6>Choose Ticket Name</h6>
 
-                                    <div class="row" id="chooseTicket">
-                                        
+                                    <div class="row">
+                                        <select name="" id="chooseTicket" class="form-control" aria-placeholder="choose Ticket">
+                                            <option value="pop">Pop night</option>
+                                        </select>
                                     </div>
-                                    <br>
 
                                     <h6>Choose Ticket Type</h6>
 
@@ -145,6 +146,10 @@ https://templatemo.com/tm-583-festava-live
                                             </div>
                                         </div>
                                     </div>
+
+                                    <h6>Ticket Number</h6>
+
+                                    <input type="number" id="ticket-form-number" class="form-control" value="1">
 
                                     <textarea name="ticket-form-message" rows="3" class="form-control" id="ticket-form-message" placeholder="Additional Request"></textarea>
 

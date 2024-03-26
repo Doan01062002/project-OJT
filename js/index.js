@@ -1,11 +1,11 @@
 let sendMessageCustomer = JSON.parse(localStorage.getItem("sendMessageCustomer")) || [];
 
-let contactName = document.getElementById("contact-name").value;
-let contactEmail = document.getElementById("contact-email").value;
-let contactPhone = document.getElementById("contact-phone").value;
-let contactMessage = document.getElementById("contact-message").value;
-
 function sendMessage(){
+
+    let contactName = document.getElementById("contact-name").value;
+    let contactEmail = document.getElementById("contact-email").value;
+    let contactPhone = document.getElementById("contact-phone").value;
+    let contactMessage = document.getElementById("contact-message").value;
     
     let obj = {
         id: Math.floor(Math.random() * 1000000000000),
@@ -17,6 +17,8 @@ function sendMessage(){
 
     sendMessageCustomer.push(obj);
     localStorage.setItem("sendMessageCustomer", JSON.stringify(sendMessageCustomer));
+    
+    alert("Phản hồi đã được gửi thành công");
 
     document.getElementById("contact-name").value = "";
     document.getElementById("contact-email").value = "";
@@ -24,7 +26,6 @@ function sendMessage(){
     document.getElementById("contact-message").value = "";
 
 
-    alert("Phản hồi đã được gửi thành công");
 }
 
 //Sản phẩm vé 
@@ -131,3 +132,23 @@ function render(){
 }
 
 render();
+
+// chuyển đổi google map và messageForm
+
+function showMessage() {
+    // Hiển thị tab biểu mẫu liên hệ
+    document.getElementById("nav-ContactForm-tab").classList.add("active");
+    document.getElementById("nav-ContactMap-tab").classList.remove("active");
+  
+    document.getElementById("nav-ContactForm").classList.add("show", "active");
+    document.getElementById("nav-ContactMap").classList.remove("show", "active");
+}
+  
+function showMap() {
+    // Hiển thị tab Google Maps
+    document.getElementById("nav-ContactForm-tab").classList.remove("active");
+    document.getElementById("nav-ContactMap-tab").classList.add("active");
+  
+    document.getElementById("nav-ContactForm").classList.remove("show", "active");
+    document.getElementById("nav-ContactMap").classList.add("show", "active");
+}

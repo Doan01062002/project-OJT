@@ -65,6 +65,7 @@ function renderTable(){
     <tr>
       <td>${users[i].id}</td>
       <td>${users[i].fullName}</td>
+      <td>${users[i].chooseTicketName}</td>
       <td>${users[i].ticketNumber}</td>
       <td>$${users[i].ticketType}</td>
       <td>
@@ -107,6 +108,7 @@ function information(id){
       <span><b>Full Name: </b><p>${users[i].fullName}</p></span><br>
       <span><b>Email Address: </b><p>${users[i].email}</p></span><br>
       <span><b>Phone number: </b><p>${users[i].phone}</p></span><br>
+      <span><b>Ticket Name: </b><p>${users[i].chooseTicketName}</p></span><br>
       <span><b>Ticket Type: </b><p>$${users[i].ticketType}</p></span><br>
       <span><b>Number Ticket: </b><p>${users[i].ticketNumber}</p></span><br>
       <span><b>Feedback: </b><p>${users[i].formMessage}</p></span><br>
@@ -165,6 +167,12 @@ function fix(id) {
           <input id="email" type="email" placeholder="Email address" value="${users[i].email}">
       </div>
       <input id="phoneNumber" class="phoneNumber" type="tel" placeholder="phone" style="margin-bottom: 10px;" value="${users[i].phone}">
+      <h4>Choose Ticket Name</h4>
+      <div class="row">
+        <select name="" id="chooseTicket" class="numberTicket" aria-placeholder="choose Ticket">
+          
+        </select>
+      </div>
       <h4 style="margin-bottom: 10px;">Choose Ticket type</h4>
       <div class="ticket" style="margin-bottom: 10px;">
           <input type="radio" name="ticket" value="120" ${ticketEarly ? "checked" : ""}>Eary bird $120
@@ -178,6 +186,18 @@ function fix(id) {
   }
 
   fixCustomer.innerHTML = element;
+
+  let elementOption = "";
+
+  for(let i=0;i<products.length;i++){
+    elementOption +=
+    `
+    <option value="${products[i].name}">${products[i].name}, ${products[i].date}, ${products[i].time}</option>
+    `
+  }
+  
+  document.getElementById("chooseTicket").innerHTML = elementOption;
+
   fixCustomer.style.display = "block";
 
   closeBtn();
@@ -238,6 +258,8 @@ function closeBtnn(){
 
 var addCustomer = document.getElementById("addCustomer");
 
+let products = JSON.parse(localStorage.getItem("products"));
+
 function addCustomers(){
   let element = "";
 
@@ -250,6 +272,12 @@ function addCustomers(){
           <input id="email" type="email" placeholder="Email address" value="">
       </div>
       <input id="phoneNumber" class="phoneNumber" type="tel" placeholder="phone" style="margin-bottom: 10px;" value="">
+      <h4>Choose Ticket Name</h4>
+      <div class="row">
+        <select name="" id="chooseTicket" class="numberTicket" aria-placeholder="choose Ticket">
+          
+        </select>
+      </div>
       <h4 style="margin-bottom: 10px;">Choose Ticket type</h4>
       <div class="ticket" style="margin-bottom: 10px;">
           <input type="radio" name="ticket" value="120" >Eary bird $120
@@ -260,7 +288,20 @@ function addCustomers(){
       <button onclick="confirmCustomer()">Thêm (+)</button>
       `;
 
+    
   addCustomer.innerHTML = element;
+
+  let elementOption = "";
+
+  for(let i=0;i<products.length;i++){
+    elementOption +=
+    `
+    <option value="${products[i].name}">${products[i].name}, ${products[i].date}, ${products[i].time}</option>
+    `
+  }
+  
+  document.getElementById("chooseTicket").innerHTML = elementOption;
+
   addCustomer.style.display = "block";
 
   closeBtn();
@@ -276,6 +317,7 @@ function confirmCustomer(){
   let ticketNumber = document.getElementById("numberTicket").value;
   let formMessage = document.getElementById("formMessage").value;
   let ticketType = document.getElementsByName("ticket");
+  let chooseTicketName = document.getElementById("chooseTicket").value;
 
   let valueTicketType = null;
   for(let i=0; i<ticketType.length; i++){
@@ -292,22 +334,12 @@ function confirmCustomer(){
       ticketNumber:`${ticketNumber}`,
       formMessage:`${formMessage}`,
       ticketType:`${valueTicketType}`,
+      chooseTicketName:`${chooseTicketName}`
   }
 
-  let flag = true;
-  for(let i=0; i< users.length; i++){
-      if(email == users[i].email || phone == users[i].phone){
-          alert("email hoặc số điện thoại đã được sử dụng");
-          flag = false;
-          break;
-      }
-  }
-
-  if(flag == true){
-      users.push(obj);
-      alert("Thêm khách hàng thành công thành công!");
-      localStorage.setItem("users", JSON.stringify(users));
-  }
+  users.push(obj);
+  alert("Thêm khách hàng thành công thành công!");
+  localStorage.setItem("users", JSON.stringify(users));
 
   closeBtnnn();
 
@@ -320,8 +352,51 @@ function closeBtnnn(){
   addCustomer.style.display = "none";
 }
 
-// Tìm kiếm khách hàng theo tên
+//ẩn hiện các danh mục
 
-function searchCustomer(){
-  
+let sendMessageCustomer = JSON.parse(localStorage.getItem("sendMessageCustomer"));
+
+let details = document.getElementById("details");
+
+function showDashboards() {
+  details.style.display = "inline-flex";
+
+  closeMessage();
+}
+
+function closeDashboards(){
+  details.style.display = "none";
+}
+
+let messageContainer = document.getElementById("message");
+
+function closeMessage(){
+  messageContainer.style.display = "none";
+}
+
+function showMessage(){
+
+  let element = "";
+
+  for(let i = 0; i < sendMessageCustomer.length; i++){
+    element +=
+    `
+    <div class="messageCustomer">
+      <h4>${sendMessageCustomer[i].contactName}</h4>
+      <br>
+      <h5>Email: ${sendMessageCustomer[i].contactEmail}</h5>
+      <br>
+      <h5>Phone: ${sendMessageCustomer[i].contactPhone}</h5>
+      <br>
+      <p>Message: ${sendMessageCustomer[i].contactMessage}</p>
+      <br>
+    </div>
+    `;
+  }
+
+  document.getElementById("messageCustomer").innerHTML = element;
+
+  messageContainer.style.display = "inline-flex";
+
+  closeDashboards();
 }

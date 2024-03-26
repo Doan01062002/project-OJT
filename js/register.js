@@ -8,6 +8,7 @@ function test(e) {
     let ticketNumber = document.getElementById("ticket-form-number").value;
     let formMessage = document.getElementById("ticket-form-message").value;
     let ticketType = document.getElementsByName("TicketForm");
+    let chooseTicketName = document.getElementById("chooseTicket").value;
 
     let valueTicketType = null;
     for(let i=0; i<ticketType.length; i++){
@@ -17,7 +18,6 @@ function test(e) {
     };
 
     let obj = { 
-        cart:[],
         id: Math.floor(Math.random() * 1000000000),
         fullName:`${fullName}`,
         email:`${email}`,
@@ -25,22 +25,25 @@ function test(e) {
         ticketNumber:`${ticketNumber}`,
         formMessage:`${formMessage}`,
         ticketType:`${valueTicketType}`,
+        chooseTicketName:`${chooseTicketName}`
     }
-
-    let flag = true;
-    for(let i=0; i< users.length; i++){
-        if(email == users[i].email || phone == users[i].phone){
-            alert("email hoặc số điện thoại đã được sử dụng");
-            flag = false;
-            break;
-        }
-    }
-    if(flag == true){
+    
         users.push(obj);
-        alert("Mua vé thành công thành công!");
         localStorage.setItem("users", JSON.stringify(users));
+
+        //giảm số lượng vé khi người dùng mua vé
+
+        for(let j=0;j<products.length;j++){
+            if(chooseTicketName == products[j].name){
+                let ticketQuantity = products[j].quantity - ticketNumber;
+
+                products[j].quantity = ticketQuantity;
+                localStorage.setItem("products", JSON.stringify(products));
+            }
+        }
+
+        alert("Mua vé thành công thành công!");
         window.location.replace("index.html");   
-    }
 };
 
 
@@ -52,15 +55,7 @@ function render(){
     for(let i=0;i<products.length;i++){
         element +=
         `
-        <div class="col-lg-6 col-md-6 col-12">
-            <div class="form-check form-control">
-                <input class="form-check-input" value = 120 type="checkbox" name="TicketForm" id="flexRadioDefault1">
-                <label class="form-check-label" for="flexRadioDefault1">
-                    <p>${products[i].name}, ${products[i].time} PM</p>
-                    <input class="numberTicket form-check-input" type="number" min="1" placeholder="number" value="1">
-                </label>
-            </div>
-        </div>
+        <option value="${products[i].name}">${products[i].name}, ${products[i].date}, ${products[i].time}</option>
         `
     }
 
@@ -69,3 +64,4 @@ function render(){
 }
 
 render();
+

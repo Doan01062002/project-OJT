@@ -27,7 +27,7 @@
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="#" onclick="showDashboards()">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
@@ -36,7 +36,7 @@
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="#" onclick="showMessage()">
                         <span class="icon">
                             <ion-icon name="chatbubble-outline"></ion-icon>
                         </span>
@@ -45,18 +45,16 @@
                 </li>
 
                 <li>
-                    <a href="#">
+                    <a href="#" onclick="products()">
                         <span class="material-symbols-outlined icon">inventory</span>
                         <span class="title">Products</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="lock-closed-outline"></ion-icon>
-                        </span>
-                        <span class="title">Password</span>
+                    <a href="#" onclick="settings()">
+                        <span class="material-symbols-outlined icon">settings</span>
+                        <span class="title">settings</span>
                     </a>
                 </li>
 
@@ -138,7 +136,7 @@
             </div>
 
             <!-- ================ Order Details List ================= -->
-            <div class="details">
+            <div class="details" id="details" style="display: inline-flexbox;">
                 <div class="recentOrders">
                     <div class="cardHeader">
                         <h2>Recent Orders</h2>
@@ -151,6 +149,7 @@
                                 <th>STT</th>
                                 <th>ID</th>
                                 <th>Name</th>
+                                <th>Ticket Name</th>
                                 <th>Qantity</th>
                                 <th>Price</th>
                                 <th>Status</th>
@@ -178,6 +177,23 @@
                 </div>
 
             </div>
+            
+            <!-- ================= Messages ================ -->
+
+            <div class="details" id="message" style="display: none;">
+                <div class="recentOrders" id="messageCustomer">
+                    
+                </div>
+            </div>
+
+            <!-- ================= Products ================ -->
+
+            <div class="details" id="products" style="display: none;">
+                <div class="recentOrders"></div>
+            </div>
+
+            <!-- ================= Settings ================ -->
+
         </div>
     </div>
 
