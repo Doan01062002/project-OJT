@@ -17,6 +17,7 @@ function test(e) {
     };
 
     let obj = { 
+        cart:[],
         id: Math.floor(Math.random() * 1000000000),
         fullName:`${fullName}`,
         email:`${email}`,
@@ -41,3 +42,30 @@ function test(e) {
         window.location.replace("index.html");   
     }
 };
+
+
+let products = JSON.parse(localStorage.getItem("products"));
+
+function render(){
+    let element = "";
+
+    for(let i=0;i<products.length;i++){
+        element +=
+        `
+        <div class="col-lg-6 col-md-6 col-12">
+            <div class="form-check form-control">
+                <input class="form-check-input" value = 120 type="checkbox" name="TicketForm" id="flexRadioDefault1">
+                <label class="form-check-label" for="flexRadioDefault1">
+                    <p>${products[i].name}, ${products[i].time} PM</p>
+                    <input class="numberTicket form-check-input" type="number" min="1" placeholder="number" value="1">
+                </label>
+            </div>
+        </div>
+        `
+    }
+
+    document.getElementById("chooseTicket").innerHTML = element;
+
+}
+
+render();
