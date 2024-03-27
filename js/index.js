@@ -152,3 +152,79 @@ function showMap() {
     document.getElementById("nav-ContactForm").classList.remove("show", "active");
     document.getElementById("nav-ContactMap").classList.add("show", "active");
 }
+
+//select theo từng thể loại
+
+function renderOption(){
+    let element = "";
+
+    for(let i=0;i<products.length;i++){
+        element +=
+        `
+        <option value="${products[i].category}">${products[i].category} ↓</option>
+        `
+    }
+
+    document.getElementById("chooseTicket").innerHTML = element;
+
+}
+
+renderOption();
+
+// sắp xếp theo thể loại nhạc
+
+function renderCategory(){
+    let categoryTicket = document.getElementById("chooseTicket").value;
+
+    let category = [];
+
+    for(let i=0;i<products.length;i++){
+        if(products[i].category == categoryTicket){
+            category.push(products[i]);
+        }
+    }
+
+    let element = "";
+
+    for(let j=0; j<category.length; j++){
+        element +=
+        `
+        <tr>
+            <td>
+                <h3>${category[j].name}</h3>
+            </td>
+
+            <td>
+                <p>${category[j].category}</p>
+            </td>
+                                            
+            <td>
+                <p>${category[j].author}</p>
+            </td>
+
+            <td>
+                <p>${category[j].time} PM</p>
+                <p>${category[j].date}</p>
+            </td>
+
+            <td>
+                <p>${category[j].quantity}</p>
+            </td>
+
+        </tr>
+
+        `
+    }
+    
+    document.getElementById("tableTicket").innerHTML = element;
+
+    var table = document.getElementById("tableTicket");
+    var rows = table.getElementsByTagName("tr");
+
+    for (var k = 0; k < rows.length; k++) {
+        var cell = document.createElement("td");
+        cell.textContent = k+1;
+        rows[k].insertBefore(cell, rows[k].firstChild);
+    }
+}
+

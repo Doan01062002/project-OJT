@@ -362,6 +362,8 @@ function showDashboards() {
   details.style.display = "inline-flex";
 
   closeMessage();
+
+  closeProducts();
 }
 
 function closeDashboards(){
@@ -390,6 +392,8 @@ function showMessage(){
       <br>
       <p>Message: ${sendMessageCustomer[i].contactMessage}</p>
       <br>
+      <button>Feedback</button>
+      <br>
     </div>
     `;
   }
@@ -399,4 +403,69 @@ function showMessage(){
   messageContainer.style.display = "inline-flex";
 
   closeDashboards();
+
+  closeProducts();
 }
+
+
+let showProduct = document.getElementById("products");
+
+function closeProducts(){
+  showProduct.style.display = "none";
+}
+
+function showProducts(){
+
+  closeDashboards();
+  closeMessage();
+}
+
+//search tìm kiếm khách hàng theo tên
+
+function searchCustomer(){
+
+  let customer = [];
+
+  let searchValue = document.getElementById("searchValue").value.toLowerCase();
+
+  for(let i=0;i<users.length;i++){
+    let customerName = users[i].fullName.toLowerCase();
+
+    if(customerName.includes(searchValue)){
+      console.log(searchValue);
+      customer.push(users[i]);
+    }
+  }
+
+  let element = "";
+
+  for(let j=0; j<customer.length; j++){
+    element += 
+    `
+    <tr>
+      <td>${customer[j].id}</td>
+      <td>${customer[j].fullName}</td>
+      <td>${customer[j].chooseTicketName}</td>
+      <td>${customer[j].ticketNumber}</td>
+      <td>$${customer[j].ticketType}</td>
+      <td>
+        <button type="button" onclick="fix(${customer[j].id})" class="btn btn-primary">Sửa</button>
+        <button type="button" onclick="deleteCustomer(${customer[j].id})" class="btn btn-danger">Xóa</button>
+        <button type="button" onclick="information(${customer[j].id})" class="btn btn-infor">Chi tiết</button>
+      </td>
+    </tr>
+    `
+  }
+  
+  document.getElementById("myTable").innerHTML = element;
+
+  var table = document.getElementById("myTable");
+  var rows = table.getElementsByTagName("tr");
+
+  for (var k = 0; k < rows.length; k++) {
+    var cell = document.createElement("td");
+    cell.textContent = k+1;
+    rows[k].insertBefore(cell, rows[k].firstChild);
+  }
+}
+

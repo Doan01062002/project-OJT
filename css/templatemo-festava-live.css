@@ -596,6 +596,12 @@ strong {
   margin-left: -25px;
 }
 
+#chooseTicket{
+  border: transparent;
+  color: #EE5007;
+  font-size: 18px;
+}
+
 
 /*---------------------------------------
   ARTISTS              
