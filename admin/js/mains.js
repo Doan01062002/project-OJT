@@ -56,40 +56,40 @@ dashbroad();
 
 //Render dữ liệu
 
-function renderTable(){
-  let element = "";
+// function renderTable(){
+//   let element = "";
 
-  for(let i=0; i<users.length; i++){
-    element += 
-    `
-    <tr>
-      <td>${users[i].id}</td>
-      <td>${users[i].fullName}</td>
-      <td>${users[i].chooseTicketName}</td>
-      <td>${users[i].ticketNumber}</td>
-      <td>$${users[i].ticketType}</td>
-      <td>
-        <button type="button" onclick="fix(${users[i].id})" class="btn btn-primary">Sửa</button>
-        <button type="button" onclick="deleteCustomer(${users[i].id})" class="btn btn-danger">Xóa</button>
-        <button type="button" onclick="information(${users[i].id})" class="btn btn-infor">Chi tiết</button>
-      </td>
-    </tr>
-    `
-  }
+//   for(let i=0; i<users.length; i++){
+//     element += 
+//     `
+//     <tr>
+//       <td>${users[i].id}</td>
+//       <td>${users[i].fullName}</td>
+//       <td>${users[i].chooseTicketName}</td>
+//       <td>${users[i].ticketNumber}</td>
+//       <td>$${users[i].ticketType}</td>
+//       <td>
+//         <button type="button" onclick="fix(${users[i].id})" class="btn btn-primary">Sửa</button>
+//         <button type="button" onclick="deleteCustomer(${users[i].id})" class="btn btn-danger">Xóa</button>
+//         <button type="button" onclick="information(${users[i].id})" class="btn btn-infor">Chi tiết</button>
+//       </td>
+//     </tr>
+//     `
+//   }
   
-  document.getElementById("myTable").innerHTML = element;
+//   document.getElementById("myTable").innerHTML = element;
 
-  var table = document.getElementById("myTable");
-  var rows = table.getElementsByTagName("tr");
+//   var table = document.getElementById("myTable");
+//   var rows = table.getElementsByTagName("tr");
 
-  for (var j = 0; j < rows.length; j++) {
-    var cell = document.createElement("td");
-    cell.textContent = j+1;
-    rows[j].insertBefore(cell, rows[j].firstChild);
-  }
-}
+//   for (var j = 0; j < rows.length; j++) {
+//     var cell = document.createElement("td");
+//     cell.textContent = j+1;
+//     rows[j].insertBefore(cell, rows[j].firstChild);
+//   }
+// }
 
-renderTable();
+// renderTable();
 
 //xem thông tin chi tiết khách hàng
 
@@ -132,11 +132,12 @@ function closeBtn(){
 function deleteCustomer(id){
   for(let i=0; i<users.length; i++){
     if(id == users[i].id){
-      localStorage.setItem("users", JSON.stringify(users.splice(i,1)));
+      users.splice(i,1)
+      localStorage.setItem("users", JSON.stringify(users));
     }
   }
 
-  renderTable();
+  renderUsersPage();
 
   dashbroad();
 }
@@ -242,7 +243,7 @@ function confirm(id){
 
   alert("Thay đổi thành công");
 
-  renderTable();
+  renderUsersPage();
 
   closeBtn();
 
@@ -343,7 +344,7 @@ function confirmCustomer(){
 
   closeBtnnn();
 
-  renderTable();
+  renderUsersPage();
 
   dashbroad();
 }
@@ -376,6 +377,8 @@ function closeMessage(){
   messageContainer.style.display = "none";
 }
 
+//Hiển thị phần phản hồi
+
 function showMessage(){
 
   let element = "";
@@ -392,7 +395,7 @@ function showMessage(){
       <br>
       <p>Message: ${sendMessageCustomer[i].contactMessage}</p>
       <br>
-      <button>Feedback</button>
+      <button onclick="feedbackMessage()">Feedback</button>
       <br>
     </div>
     `;
@@ -407,6 +410,30 @@ function showMessage(){
   closeProducts();
 }
 
+let feedback = document.getElementById("feedbackMessage");
+
+function feedbackMessage(){
+
+  let element ="";
+
+  element +=
+  `
+  <span onclick="closeFeedback()" class="material-symbols-outlined">close</span>
+  <h2>Phản hồi khách hàng</h2>
+  <br>
+  <textarea name="" id="" cols="30" rows="10"></textarea>
+  <button onclick = "closeFeedback()">Phản hồi</button>
+  `
+
+  feedback.innerHTML = element;
+
+  feedback.style.display = "block";
+}
+
+function closeFeedback(){
+  feedback.style.display = "none";
+}
+
 
 let showProduct = document.getElementById("products");
 
@@ -414,11 +441,185 @@ function closeProducts(){
   showProduct.style.display = "none";
 }
 
+//Hiện thị mục Products
+
 function showProducts(){
+
+  let renderProduct = document.getElementById("products");
+  
+  renderProduct.style.display = "inline-flex";
 
   closeDashboards();
   closeMessage();
 }
+
+//select theo từng thể loại
+
+function renderOption(){
+  let element = "";
+
+  for(let i=0;i<products.length;i++){
+      element +=
+      `
+      <option value="${products[i].category}">${products[i].category} </option>
+      `
+  }
+
+  document.getElementById("chooseTicket").innerHTML = element;
+
+}
+
+renderOption();
+
+// sắp xếp theo thể loại nhạc
+
+function renderCategory(){
+  let categoryTicket = document.getElementById("chooseTicket").value;
+
+  let category = [];
+
+  for(let i=0;i<products.length;i++){
+      if(products[i].category == categoryTicket){
+          category.push(products[i]);
+      }
+  }
+
+  let element = "";
+
+  for(let j=0; j<category.length; j++){
+      element +=
+      `
+      <tr>
+          <td>
+              <h3>${category[j].name}</h3>
+          </td>
+
+          <td>
+              <p>${category[j].category}</p>
+          </td>
+                                          
+          <td>
+              <p>${category[j].author}</p>
+          </td>
+
+          <td>
+              <p>${category[j].time} PM</p>
+              <p>${category[j].date}</p>
+          </td>
+
+          <td>
+              <p>${category[j].quantity}</p>
+          </td>
+
+      </tr>
+
+      `
+  }
+  
+  document.getElementById("ProductTable").innerHTML = element;
+
+  var table = document.getElementById("ProductTable");
+  var rows = table.getElementsByTagName("tr");
+
+  for (var k = 0; k < rows.length; k++) {
+      var cell = document.createElement("td");
+      cell.textContent = k+1;
+      rows[k].insertBefore(cell, rows[k].firstChild);
+  }
+}
+
+//Phân trang 
+function renderProductsPage(){
+  var itemPerPage = 5;
+  var currentPage = 1;
+
+  // Lấy danh sách sản phẩm từ localStorage
+  var products = JSON.parse(localStorage.getItem("products"));
+
+  //render danh sách dữ liệu trên trang hiện tại
+  function renderData(){
+      var dataContainer = document.getElementById("ProductTable");
+      dataContainer.innerHTML = "";
+  
+      var starIndex = (currentPage -1) * itemPerPage;
+      var endIndex = starIndex + itemPerPage;
+  
+      var itemsOnpage = products.slice(starIndex,endIndex);
+  
+      // Tạo các hàng và cột dữ liệu
+      for(let i=0; i<itemsOnpage.length; i++){
+          var tr = document.createElement("tr");
+
+          // Chèn số thứ tự vào cột đầu tiên
+          var indexTd = document.createElement("td");
+          indexTd.textContent = i + 1;
+          tr.appendChild(indexTd);
+  
+          // Truy cập và hiển thị giá trị các thuộc tính
+          var nameTd = document.createElement("td");
+          nameTd.textContent = itemsOnpage[i].name;
+          tr.appendChild(nameTd);
+
+          var categoryTd = document.createElement("td");
+          categoryTd.textContent = itemsOnpage[i].category;
+          tr.appendChild(categoryTd);
+
+          var authorTd = document.createElement("td");
+          authorTd.textContent = itemsOnpage[i].author;
+          tr.appendChild(authorTd);
+
+          var dateTd = document.createElement("td");
+          dateTd.textContent = itemsOnpage[i].date +" <-> "+ itemsOnpage[i].time;
+          tr.appendChild(dateTd);
+  
+          var quantityTd = document.createElement("td");
+          quantityTd.textContent = itemsOnpage[i].quantity;
+          tr.appendChild(quantityTd);
+
+          var buttonTd = document.createElement("td");
+          buttonTd.innerHTML = `<button type="button" onclick="fixProductss(${itemsOnpage[i].id})" class="btn btn-primary">Sửa</button>
+          <button type="button" onclick="deleteProducts(${itemsOnpage[i].id})" class="btn btn-danger">Xóa</button>`;
+          tr.appendChild(buttonTd);
+  
+          dataContainer.appendChild(tr);
+      }
+  }
+
+  //render Phân trang
+  function renderPagination(){
+      var paginationContainer = document.getElementById("paginationProduct");
+
+      paginationContainer.innerHTML = "";
+
+      var totalPage = Math.ceil(products.length / itemPerPage);
+
+      var ul = document.createElement("ul");
+      ul.classList.add("paginationProduct");
+
+      for(let i=1; i<= totalPage; i++){
+          var li = document.createElement("li");
+          li.textContent = i;
+          li.addEventListener("click", function(){
+              currentPage = parseInt(this.textContent);
+              renderData();
+              renderPagination();
+          });
+
+          if(i === currentPage){
+              li.classList.add("active");
+          }
+
+          ul.appendChild(li);
+      }
+      
+      paginationContainer.appendChild(ul);
+  }
+  
+  renderData();
+  renderPagination();
+  
+}
+document.addEventListener("DOMContentLoaded", renderProductsPage());
 
 //search tìm kiếm khách hàng theo tên
 
@@ -469,3 +670,254 @@ function searchCustomer(){
   }
 }
 
+// phân trang cho Recent Oder của Dashboard
+function renderUsersPage(){
+  var itemPerPage = 5;
+  var currentPage = 1;
+
+  // Lấy danh sách sản phẩm từ localStorage
+  var users = JSON.parse(localStorage.getItem("users"));
+
+  //render danh sách dữ liệu trên trang hiện tại
+  function renderData(){
+      var dataContainer = document.getElementById("myTable");
+      dataContainer.innerHTML = "";
+  
+      var starIndex = (currentPage -1) * itemPerPage;
+      var endIndex = starIndex + itemPerPage;
+  
+      var itemsOnpage = users.slice(starIndex,endIndex);
+  
+      // Tạo các hàng và cột dữ liệu
+      for(let i=0; i<itemsOnpage.length; i++){
+          var tr = document.createElement("tr");
+
+          // Chèn số thứ tự vào cột đầu tiên
+          var indexTd = document.createElement("td");
+          indexTd.textContent = i + 1;
+          tr.appendChild(indexTd);
+  
+          // Truy cập và hiển thị giá trị các thuộc tính
+          var nameTd = document.createElement("td");
+          nameTd.textContent = itemsOnpage[i].id;
+          tr.appendChild(nameTd);
+
+          var categoryTd = document.createElement("td");
+          categoryTd.textContent = itemsOnpage[i].fullName;
+          tr.appendChild(categoryTd);
+
+          var authorTd = document.createElement("td");
+          authorTd.textContent = itemsOnpage[i].chooseTicketName;
+          tr.appendChild(authorTd);
+
+          var dateTd = document.createElement("td");
+          dateTd.textContent = itemsOnpage[i].ticketNumber;
+          tr.appendChild(dateTd);
+  
+          var quantityTd = document.createElement("td");
+          quantityTd.textContent = itemsOnpage[i].ticketType;
+          tr.appendChild(quantityTd);
+
+          var buttonTd = document.createElement("td");
+          buttonTd.innerHTML = `<button type="button" onclick="fix(${users[i].id})" class="btn btn-primary">Sửa</button>
+          <button type="button" onclick="deleteCustomer(${users[i].id})" class="btn btn-danger">Xóa</button>
+          <button type="button" onclick="information(${users[i].id})" class="btn btn-infor">Chi tiết</button>`;
+          tr.appendChild(buttonTd);
+  
+          dataContainer.appendChild(tr);
+      }
+  }
+
+  //render Phân trang
+  function renderPagination(){
+      var paginationContainer = document.getElementById("pagination");
+
+      paginationContainer.innerHTML = "";
+
+      var totalPage = Math.ceil(products.length / itemPerPage);
+
+      var ul = document.createElement("ul");
+      ul.classList.add("pagination");
+
+      for(let i=1; i<= totalPage; i++){
+          var li = document.createElement("li");
+          li.textContent = i;
+          li.addEventListener("click", function(){
+              currentPage = parseInt(this.textContent);
+              renderData();
+              renderPagination();
+          });
+
+          if(i === currentPage){
+              li.classList.add("active");
+          }
+
+          ul.appendChild(li);
+      }
+      
+      paginationContainer.appendChild(ul);
+  }
+  
+  renderData();
+  renderPagination();
+  
+}
+document.addEventListener("DOMContentLoaded", renderUsersPage());
+
+
+// Chỉnh sửa thông tin sản phẩm
+
+// Xóa thông tin sản phẩm
+
+function deleteProducts(id){
+  for(let i=0; i<products.length; i++){
+    if(id == products[i].id){
+      products.splice(i,1)
+      localStorage.setItem("products", JSON.stringify(products));
+    }
+  }
+  renderProductsPage();
+}
+
+//Thêm sản phẩm
+
+var addProducts = document.getElementById("addProducts");
+
+function showAddProducts(){
+  let element = "";
+
+      element +=
+        `
+      <span onclick="closeAddProduct()" class="material-symbols-outlined">close</span>
+      <h2>Thêm Vé</h2>
+      <div class="nameAndAddress" style="margin-bottom: 10px;">
+          <input id="productDate" type="text" placeholder="Date" value="">
+          <input id="productTime" type="text" placeholder="Time" value="">
+      </div>
+      <input id="productName" placeholder = "Name" class="phoneNumber" type="text" style="margin-bottom: 10px;" value="">
+      <h4 style="margin-bottom: 10px;">Category and Author</h4>
+      <div class="nameAndAddress" style="margin-bottom: 10px;">
+          <input id="productCategory" type="text" placeholder="Category" value="">
+          <input id="productAuthor" type="text" placeholder="Author" value="">
+      </div>
+      <input id="productNumber" class="numberTicket" type="number" placeholder="Number of Ticket" style="margin-bottom: 10px;" value="">
+      <button onclick="confirmProducts()">Xác nhận</button>
+      `;
+
+  addProducts.innerHTML = element;
+
+  addProducts.style.display = "block";
+}
+
+function closeAddProduct(){
+  addProducts.style.display = "none";
+}
+
+function confirmProducts(){
+
+  let productDate = document.getElementById("productDate").value;
+  let productTime = document.getElementById("productTime").value;
+  let productName = document.getElementById("productName").value;
+  let productCategory = document.getElementById("productCategory").value;
+  let productAuthor = document.getElementById("productAuthor").value;
+  let productNumber = document.getElementById("productNumber").value;
+
+      let obj = {
+        id: Math.floor(Math.random() * 1000000000),
+        date: productDate,
+        time: productTime,
+        name: productName,
+        category: productCategory,
+        author: productAuthor,
+        quantity: productNumber,
+      }
+
+  products.push(obj);
+  localStorage.setItem("products", JSON.stringify(products));
+
+  alert("Thêm thành công");
+
+  closeAddProduct()
+
+  renderProductsPage();
+
+}
+
+// Sửa thông tin sản phẩm
+
+let fixProducts = document.getElementById("fixProducts");
+
+function fixProductss(id) {
+  let element = "";
+
+  for (let i = 0; i < products.length; i++) {
+    if (id == products[i].id) {
+
+      element +=
+        `
+      <span onclick="closeFixProducts()" class="material-symbols-outlined">close</span>
+      <h2>Chỉnh sửa thông tin sản phẩm</h2>
+      <div class="nameAndAddress" style="margin-bottom: 10px;">
+          <input id="productDate" type="text" placeholder="Date" value="${products[i].date}">
+          <input id="productTime" type="text" placeholder="Time" value="${products[i].time}">
+      </div>
+      <input id="productName" class="phoneNumber" type="text" style="margin-bottom: 10px;" value="${products[i].name}">
+      <h4 style="margin-bottom: 10px;">Category and Author</h4>
+      <div class="nameAndAddress" style="margin-bottom: 10px;">
+          <input id="productCategory" type="text" placeholder="Date" value="${products[i].category}">
+          <input id="productAuthor" type="text" placeholder="Time" value="${products[i].author}">
+      </div>
+      <input id="productNumber" class="numberTicket" type="number" placeholder="Number of Ticket" style="margin-bottom: 10px;" value="${products[i].quantity}">
+      <button onclick="confirmProducts(${products[i].id})">Xác nhận</button>
+      `;
+    }
+  }
+
+  fixProducts.innerHTML = element;
+
+  closeAddProduct();
+  
+  fixProducts.style.display = "block";
+
+}
+
+function confirmProducts(id){
+
+  let productDate = document.getElementById("productDate").value;
+  let productTime = document.getElementById("productTime").value;
+  let productName = document.getElementById("productName").value;
+  let productCategory = document.getElementById("productCategory").value;
+  let productAuthor = document.getElementById("productAuthor").value;
+  let productNumber = document.getElementById("productNumber").value;
+
+  for (let i = 0; i < users.length; i++) {
+    if (id == products[i].id) {
+
+      let obj = {
+        id: Math.floor(Math.random() * 1000000000),
+        date: productDate,
+        time: productTime,
+        name: productName,
+        category: productCategory,
+        author: productAuthor,
+        quantity: productNumber,
+      }
+
+      products.splice(i, 1, obj);
+      localStorage.setItem("products", JSON.stringify(products));
+
+      break;
+    }
+  }
+
+  alert("Thay đổi thành công");
+
+  renderProductsPage();
+
+  closeFixProducts();
+
+}
+
+function closeFixProducts(){
+  fixProducts.style.display = "none";
+}

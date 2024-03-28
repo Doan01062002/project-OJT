@@ -365,6 +365,52 @@ body {
   font-weight: 500;
 }
 
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 5px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination li {
+  margin: 0 5px;
+  cursor: pointer;
+  padding: 5px 10px;
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+.pagination li.active {
+  background-color: #333;
+  color: #fff;
+}
+
+.paginationProduct {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.paginationProduct li {
+  margin: 0 5px;
+  cursor: pointer;
+  padding: 5px 10px;
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+.paginationProduct li.active {
+  background-color: #333;
+  color: #fff;
+}
 /* ================== Edit Customer ============== */
 
 .recentCustomers {
@@ -500,6 +546,40 @@ body {
   flex-direction: column;
   gap: 10px;
 }
+
+.messageCustomer button{
+  width: 70px;
+  height: 25px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  margin: 3px;
+  background-color: #1faaeb;
+}
+
+/* ================== Change Product ============== */
+
+#ProductTable button{
+  width: 50px;
+  height: 25px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  margin: 3px;
+}
+
+#ProductTable .btn-primary{
+  background-color: #1faaeb;
+}
+
+#ProductTable .btn-danger{
+  background-color: rgb(240, 19, 19);
+}
+
+#ProductTable .btn-infor{
+  background-color: #e9b10a;
+}
+
 
 
 /* ====================== Responsive Design ========================== */

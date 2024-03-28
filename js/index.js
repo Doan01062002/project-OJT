@@ -28,7 +28,7 @@ function sendMessage(){
 
 }
 
-//Sản phẩm vé 
+// Sản phẩm vé 
 
 // let products = [
 //     {
@@ -76,6 +76,33 @@ function sendMessage(){
 //         time: "6:00-10:00",
 //         author: "By Members"
 //     },
+//     {
+//         id: Math.floor(Math.random() * 1000000),
+//         date:"10/01/2024",
+//         category: "edm",
+//         quantity: 88,
+//         name: "EDM Style",
+//         time: "8:00-12:00",
+//         author: "By Members"
+//     },
+//     {
+//         id: Math.floor(Math.random() * 1000000),
+//         date:"10/01/2024",
+//         category: "DJ",
+//         quantity: 99,
+//         name: "Free Style",
+//         time: "9:00-11:00",
+//         author: "By Rihana"
+//     },
+//     {
+//         id: Math.floor(Math.random() * 1000000),
+//         date:"10/01/2024",
+//         category: "free",
+//         quantity: 99,
+//         name: "Free Style",
+//         time: "7:00-11:00",
+//         author: "By Members"
+//     },
 // ];
 
 // localStorage.setItem("products", JSON.stringify(products));
@@ -84,54 +111,54 @@ function sendMessage(){
 
 let products = JSON.parse(localStorage.getItem("products"));
 
-function render(){
+// function render(){
 
-    let element = "";
+//     let element = "";
 
-    for(let i=0; i<products.length; i++){
-        element +=
-        `
-        <tr>
-            <td>
-                <h3>${products[i].name}</h3>
-            </td>
+//     for(let i=0; i<products.length; i++){
+//         element +=
+//         `
+//         <tr>
+//             <td>
+//                 <h3>${products[i].name}</h3>
+//             </td>
 
-            <td>
-                <p>${products[i].category}</p>
-            </td>
+//             <td>
+//                 <p>${products[i].category}</p>
+//             </td>
                                             
-            <td>
-                <p>${products[i].author}</p>
-            </td>
+//             <td>
+//                 <p>${products[i].author}</p>
+//             </td>
 
-            <td>
-                <p>${products[i].time} PM</p>
-                <p>${products[i].date}</p>
-            </td>
+//             <td>
+//                 <p>${products[i].time} PM</p>
+//                 <p>${products[i].date}</p>
+//             </td>
 
-            <td>
-                <p>${products[i].quantity}</p>
-            </td>
+//             <td>
+//                 <p>${products[i].quantity}</p>
+//             </td>
 
-        </tr>
+//         </tr>
 
-        `
-    }
+//         `
+//     }
     
-    document.getElementById("tableTicket").innerHTML = element;
+//     document.getElementById("tableTicket").innerHTML = element;
 
-    var table = document.getElementById("tableTicket");
-    var rows = table.getElementsByTagName("tr");
+//     var table = document.getElementById("tableTicket");
+//     var rows = table.getElementsByTagName("tr");
 
-    for (var j = 0; j < rows.length; j++) {
-        var cell = document.createElement("td");
-        cell.textContent = j+1;
-        rows[j].insertBefore(cell, rows[j].firstChild);
-    }
+//     for (var j = 0; j < rows.length; j++) {
+//         var cell = document.createElement("td");
+//         cell.textContent = j+1;
+//         rows[j].insertBefore(cell, rows[j].firstChild);
+//     }
     
-}
+// }
 
-render();
+// render();
 
 // chuyển đổi google map và messageForm
 
@@ -228,3 +255,90 @@ function renderCategory(){
     }
 }
 
+//Phân trang 
+
+document.addEventListener("DOMContentLoaded", function(){
+    var itemPerPage = 5;
+    var currentPage = 1;
+
+    // Lấy danh sách sản phẩm từ localStorage
+    var products = JSON.parse(localStorage.getItem("products"));
+
+    //render danh sách dữ liệu trên trang hiện tại
+    function renderData(){
+        var dataContainer = document.getElementById("tableTicket");
+        dataContainer.innerHTML = "";
+    
+        var starIndex = (currentPage -1) * itemPerPage;
+        var endIndex = starIndex + itemPerPage;
+    
+        var itemsOnpage = products.slice(starIndex,endIndex);
+    
+        // Tạo các hàng và cột dữ liệu
+        for(let i=0; i<itemsOnpage.length; i++){
+            var tr = document.createElement("tr");
+
+            // Chèn số thứ tự vào cột đầu tiên
+            var indexTd = document.createElement("td");
+            indexTd.textContent = i + 1;
+            tr.appendChild(indexTd);
+    
+            // Truy cập và hiển thị giá trị các thuộc tính
+            var nameTd = document.createElement("td");
+            nameTd.textContent = itemsOnpage[i].name;
+            tr.appendChild(nameTd);
+
+            var categoryTd = document.createElement("td");
+            categoryTd.textContent = itemsOnpage[i].category;
+            tr.appendChild(categoryTd);
+
+            var authorTd = document.createElement("td");
+            authorTd.textContent = itemsOnpage[i].author;
+            tr.appendChild(authorTd);
+
+            var dateTd = document.createElement("td");
+            dateTd.textContent = itemsOnpage[i].date + " <-> " + itemsOnpage[i].time;
+            tr.appendChild(dateTd);
+    
+            var quantityTd = document.createElement("td");
+            quantityTd.textContent = itemsOnpage[i].quantity;
+            tr.appendChild(quantityTd);
+    
+            dataContainer.appendChild(tr);
+        }
+    }
+
+    //render Phân trang
+    function renderPagination(){
+        var paginationContainer = document.getElementById("pagination");
+
+        paginationContainer.innerHTML = "";
+
+        var totalPage = Math.ceil(products.length / itemPerPage);
+
+        var ul = document.createElement("ul");
+        ul.classList.add("pagination");
+
+        for(let i=1; i<= totalPage; i++){
+            var li = document.createElement("li");
+            li.textContent = i;
+            li.addEventListener("click", function(){
+                currentPage = parseInt(this.textContent);
+                renderData();
+                renderPagination();
+            });
+
+            if(i === currentPage){
+                li.classList.add("active");
+            }
+
+            ul.appendChild(li);
+        }
+        
+        paginationContainer.appendChild(ul);
+    }
+    
+    renderData();
+    renderPagination();
+    
+});
