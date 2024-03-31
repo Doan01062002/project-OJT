@@ -6,16 +6,37 @@ function sendMessage(){
     let contactEmail = document.getElementById("contact-email").value;
     let contactPhone = document.getElementById("contact-phone").value;
     let contactMessage = document.getElementById("contact-message").value;
+
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    var phoneRegex = /^(0|\+84)\d{9,10}$/;
+    var isEmailValid = emailRegex.test(contactEmail);
+    var isPhoneValid = phoneRegex.test(contactPhone);
+
+    //set thời gian cho tin nhắn phản hồi
+    var currentDate = new Date();
+    var options = { timeZone: 'Asia/Ho_Chi_Minh' };
+    var vietnamDateTime = currentDate.toLocaleString('en-US', options);
+
+    console.log(vietnamDateTime);
+
     
-    let obj = {
+    if(contactName == "" || contactEmail == "" || contactPhone == "" || contactMessage == ""){
+        alert("vui lòng nhập đầy đủ thông tin")
+    }else if(!isEmailValid){
+        alert("Email không hợp lệ")
+    }else if(!isPhoneValid){
+        alert("Số điện thoại không hợp lệ")
+    }else{
+        let obj = {
         id: Math.floor(Math.random() * 1000000000000),
         contactName:`${contactName}`,
         contactEmail:`${contactEmail}`,
         contactPhone:`${contactPhone}`,
         contactMessage:`${contactMessage}`,
+        dateTimeMessage:vietnamDateTime,
     }
 
-    sendMessageCustomer.push(obj);
+    sendMessageCustomer.unshift(obj);
     localStorage.setItem("sendMessageCustomer", JSON.stringify(sendMessageCustomer));
     
     alert("Phản hồi đã được gửi thành công");
@@ -24,7 +45,7 @@ function sendMessage(){
     document.getElementById("contact-email").value = "";
     document.getElementById("contact-phone").value = "";
     document.getElementById("contact-message").value = "";
-
+    }
 
 }
 
@@ -182,18 +203,25 @@ function showMap() {
 
 //select theo từng thể loại
 
-function renderOption(){
+function renderOption() {
     let element = "";
 
-    for(let i=0;i<products.length;i++){
-        element +=
-        `
-        <option value="${products[i].category}">${products[i].category} ↓</option>
-        `
+    let categories = [];
+
+    for (let j = 0; j < products.length; j++) {
+        if (categories.indexOf(products[j].category) === -1) {
+            categories.push(products[j].category);
+        }
+    }
+    console.log(categories);
+
+    for (let i = 0; i < categories.length; i++) {
+        element += `
+            <option value="${categories[i]}">${categories[i]} ↓</option>
+        `;
     }
 
     document.getElementById("chooseTicket").innerHTML = element;
-
 }
 
 renderOption();

@@ -130,16 +130,36 @@ function closeBtn(){
 // Xóa thông tin khách hàng
 
 function deleteCustomer(id){
-  for(let i=0; i<users.length; i++){
-    if(id == users[i].id){
-      users.splice(i,1)
-      localStorage.setItem("users", JSON.stringify(users));
+
+  swal({
+    title: "Bạn có muốn xóa khách hàng này? ",
+    text: "Dữ liệu sẽ được chuyển vào thùng rác.",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      // Xóa môn khỏi mảng
+      for(let i=0; i<users.length; i++){
+        if(id == users[i].id){
+          let bin = users.splice(i,1);
+          binCustomers.unshift({...bin[0]});
+          localStorage.setItem("binCustomers", JSON.stringify(binCustomers))
+          localStorage.setItem("users", JSON.stringify(users));
+        }
+      }
+
+      swal({
+        title: "Đã được thêm vào thùng rác!",
+        icon: "success",
+      });
+      renderUsersPage();
+      dashbroad();
+    } else {
+      swal("Xác nhận không xóa.");
     }
-  }
+  });
 
-  renderUsersPage();
-
-  dashbroad();
 }
 
 // Sửa thông tin khách hàng
@@ -320,6 +340,11 @@ function confirmCustomer(){
   let ticketType = document.getElementsByName("ticket");
   let chooseTicketName = document.getElementById("chooseTicket").value;
 
+  var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  var phoneRegex = /^(0|\+84)\d{9,10}$/;
+  var isEmailValid = emailRegex.test(email);
+  var isPhoneValid = phoneRegex.test(phone);
+
   let valueTicketType = null;
   for(let i=0; i<ticketType.length; i++){
       if(ticketType[i].checked === true){
@@ -327,7 +352,14 @@ function confirmCustomer(){
       };
   };
 
-  let obj = { 
+  if(fullName == "" || email == "" || phone == "" || ticketNumber == ""){
+    alert("vui lòng không để trống")
+  }else if(!isEmailValid){
+    alert("Email không hợp lệ")
+  }else if(!isPhoneValid){
+    alert("Số điện thoại không hợp lệ")
+  }else{
+    let obj = { 
       id: Math.floor(Math.random() * 1000000000),
       fullName:`${fullName}`,
       email:`${email}`,
@@ -347,6 +379,8 @@ function confirmCustomer(){
   renderUsersPage();
 
   dashbroad();
+  }
+  
 }
 
 function closeBtnnn(){
@@ -394,6 +428,8 @@ function showMessage(){
       <h5>Phone: ${sendMessageCustomer[i].contactPhone}</h5>
       <br>
       <p>Message: ${sendMessageCustomer[i].contactMessage}</p>
+      <br>
+      <p>Time: ${sendMessageCustomer[i].dateTimeMessage}</p>
       <br>
       <button onclick="feedbackMessage()">Feedback</button>
       <br>
@@ -455,18 +491,25 @@ function showProducts(){
 
 //select theo từng thể loại
 
-function renderOption(){
+function renderOption() {
   let element = "";
 
-  for(let i=0;i<products.length;i++){
-      element +=
-      `
-      <option value="${products[i].category}">${products[i].category} </option>
-      `
+  let categories = [];
+
+  for (let j = 0; j < products.length; j++) {
+      if (categories.indexOf(products[j].category) === -1) {
+          categories.push(products[j].category);
+      }
+  }
+  console.log(categories);
+
+  for (let i = 0; i < categories.length; i++) {
+      element += `
+          <option value="${categories[i]}">${categories[i]} ↓</option>
+      `;
   }
 
   document.getElementById("chooseTicket").innerHTML = element;
-
 }
 
 renderOption();
@@ -511,6 +554,11 @@ function renderCategory(){
               <p>${category[j].quantity}</p>
           </td>
 
+          <td>
+          <button type="button" onclick="fixProductss(${category[j].id})" class="btn btn-primary">Sửa</button>
+          <button type="button" onclick="deleteProducts(${category[j].id})" class="btn btn-danger">Xóa</button>
+          </td>
+
       </tr>
 
       `
@@ -528,7 +576,7 @@ function renderCategory(){
   }
 }
 
-//Phân trang 
+//Phân trang Products
 function renderProductsPage(){
   var itemPerPage = 5;
   var currentPage = 1;
@@ -594,7 +642,7 @@ function renderProductsPage(){
       var totalPage = Math.ceil(products.length / itemPerPage);
 
       var ul = document.createElement("ul");
-      ul.classList.add("paginationProduct");
+      ul.classList.add("pagination");
 
       for(let i=1; i<= totalPage; i++){
           var li = document.createElement("li");
@@ -770,13 +818,34 @@ document.addEventListener("DOMContentLoaded", renderUsersPage());
 // Xóa thông tin sản phẩm
 
 function deleteProducts(id){
-  for(let i=0; i<products.length; i++){
-    if(id == products[i].id){
-      products.splice(i,1)
-      localStorage.setItem("products", JSON.stringify(products));
+
+  swal({
+    title: "Bạn có muốn xóa sản phẩm này? ",
+    text: "Dữ liệu sẽ được xóa vĩnh viễn.",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      // Xóa môn khỏi mảng
+      for(let i=0; i<products.length; i++){
+        if(id == products[i].id){
+          products.splice(i,1);
+          localStorage.setItem("products", JSON.stringify(products));
+        }
+      }
+      
+      swal({
+        title: "Dữ liệu đã được xóa!",
+        icon: "success",
+      });
+      
+      renderProductsPage();
+    } else {
+      swal("Xác nhận không xóa.");
     }
-  }
-  renderProductsPage();
+  });
+  
 }
 
 //Thêm sản phẩm
@@ -791,7 +860,7 @@ function showAddProducts(){
       <span onclick="closeAddProduct()" class="material-symbols-outlined">close</span>
       <h2>Thêm Vé</h2>
       <div class="nameAndAddress" style="margin-bottom: 10px;">
-          <input id="productDate" type="text" placeholder="Date" value="">
+          <input id="productDate" type="date" placeholder="Date" value="">
           <input id="productTime" type="text" placeholder="Time" value="">
       </div>
       <input id="productName" placeholder = "Name" class="phoneNumber" type="text" style="margin-bottom: 10px;" value="">
@@ -801,7 +870,7 @@ function showAddProducts(){
           <input id="productAuthor" type="text" placeholder="Author" value="">
       </div>
       <input id="productNumber" class="numberTicket" type="number" placeholder="Number of Ticket" style="margin-bottom: 10px;" value="">
-      <button onclick="confirmProducts()">Xác nhận</button>
+      <button onclick="confirmProductss()">Xác nhận</button>
       `;
 
   addProducts.innerHTML = element;
@@ -813,7 +882,7 @@ function closeAddProduct(){
   addProducts.style.display = "none";
 }
 
-function confirmProducts(){
+function confirmProductss(){
 
   let productDate = document.getElementById("productDate").value;
   let productTime = document.getElementById("productTime").value;
@@ -822,7 +891,10 @@ function confirmProducts(){
   let productAuthor = document.getElementById("productAuthor").value;
   let productNumber = document.getElementById("productNumber").value;
 
-      let obj = {
+  if(productDate =="" || productTime =="" || productName =="" || productCategory == "" || productAuthor =="" || productNumber ==""){
+    alert("vui lòng không để trống")
+  }else{
+    let obj = {
         id: Math.floor(Math.random() * 1000000000),
         date: productDate,
         time: productTime,
@@ -840,6 +912,7 @@ function confirmProducts(){
   closeAddProduct()
 
   renderProductsPage();
+  }
 
 }
 
@@ -920,4 +993,127 @@ function confirmProducts(id){
 
 function closeFixProducts(){
   fixProducts.style.display = "none";
+}
+
+//Thùng rác Customers
+
+let binCustomers = JSON.parse(localStorage.getItem("binCustomers")) || [];
+
+//Ẩn hiện thùng rác
+function addBinCustomers() {
+  document.getElementById("overlay").style.display = "flex";
+
+  renderUsersPageBin();
+}
+
+function hideOverlay() {
+  document.getElementById("overlay").style.display = "none";
+}
+
+//Render BinCustomer
+
+function renderUsersPageBin(){
+  var itemPerPage = 5;
+  var currentPage = 1;
+
+  // Lấy danh sách sản phẩm từ localStorage
+  var binCustomers = JSON.parse(localStorage.getItem("binCustomers"));
+
+  //render danh sách dữ liệu trên trang hiện tại
+  function renderData(){
+      var dataContainer = document.getElementById("binTableCustomers");
+      dataContainer.innerHTML = "";
+  
+      var starIndex = (currentPage -1) * itemPerPage;
+      var endIndex = starIndex + itemPerPage;
+  
+      var itemsOnpage = binCustomers.slice(starIndex,endIndex);
+  
+      // Tạo các hàng và cột dữ liệu
+      for(let i=0; i<itemsOnpage.length; i++){
+          var tr = document.createElement("tr");
+
+          // Chèn số thứ tự vào cột đầu tiên
+          var indexTd = document.createElement("td");
+          indexTd.textContent = i + 1;
+          tr.appendChild(indexTd);
+  
+          // Truy cập và hiển thị giá trị các thuộc tính
+          var nameTd = document.createElement("td");
+          nameTd.textContent = itemsOnpage[i].id;
+          tr.appendChild(nameTd);
+
+          var categoryTd = document.createElement("td");
+          categoryTd.textContent = itemsOnpage[i].fullName;
+          tr.appendChild(categoryTd);
+
+          var authorTd = document.createElement("td");
+          authorTd.textContent = itemsOnpage[i].chooseTicketName;
+          tr.appendChild(authorTd);
+
+          var dateTd = document.createElement("td");
+          dateTd.textContent = itemsOnpage[i].ticketNumber;
+          tr.appendChild(dateTd);
+  
+          var quantityTd = document.createElement("td");
+          quantityTd.textContent = itemsOnpage[i].ticketType;
+          tr.appendChild(quantityTd);
+
+          var buttonTd = document.createElement("td");
+          buttonTd.innerHTML = `<button type="button" onclick="undo(${itemsOnpage[i].id})" class="btn btn-primary">Hoàn tác</button>`;
+          tr.appendChild(buttonTd);
+  
+          dataContainer.appendChild(tr);
+      }
+  }
+
+  //render Phân trang
+  function renderPagination(){
+      var paginationContainer = document.getElementById("paginationBinCustomers");
+
+      paginationContainer.innerHTML = "";
+
+      var totalPage = Math.ceil(products.length / itemPerPage);
+
+      var ul = document.createElement("ul");
+      ul.classList.add("pagination");
+
+      for(let i=1; i<= totalPage; i++){
+          var li = document.createElement("li");
+          li.textContent = i;
+          li.addEventListener("click", function(){
+              currentPage = parseInt(this.textContent);
+              renderData();
+              renderPagination();
+          });
+
+          if(i === currentPage){
+              li.classList.add("active");
+          }
+
+          ul.appendChild(li);
+      }
+      
+      paginationContainer.appendChild(ul);
+  }
+  
+  renderData();
+  renderPagination();
+  
+}
+document.addEventListener("DOMContentLoaded", renderUsersPageBin());
+
+function undo(id){
+  for(let i=0;i<binCustomers.length;i++){
+    if(id == binCustomers[i].id){
+      let bin = binCustomers.splice(i,1);
+      users.unshift({...bin[0]});
+      localStorage.setItem("users", JSON.stringify(users));
+      localStorage.setItem("binCustomers", JSON.stringify(binCustomers));
+    }
+  }
+
+  renderUsersPageBin();
+
+  renderUsersPage();
 }

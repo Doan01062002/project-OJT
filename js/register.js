@@ -17,7 +17,18 @@ function test(e) {
         };
     };
 
-    let obj = { 
+    let quantityTicket = 0;
+
+    for(let k=0; k<products.length; k++){
+        if(chooseTicketName == products[k].name){
+            quantityTicket = products[k].quantity;
+        }
+    }
+
+    if(quantityTicket < ticketNumber && quantityTicket <=0){
+        alert("vé đã bán hết hoặc bạn mua quá số lượng vé hiện có vui lòng kiểm tra lại!")
+    }else{
+        let obj = { 
         id: Math.floor(Math.random() * 1000000000),
         fullName:`${fullName}`,
         email:`${email}`,
@@ -28,7 +39,7 @@ function test(e) {
         chooseTicketName:`${chooseTicketName}`
     }
     
-        users.push(obj);
+        users.unshift(obj);
         localStorage.setItem("users", JSON.stringify(users));
 
         //giảm số lượng vé khi người dùng mua vé
@@ -43,7 +54,9 @@ function test(e) {
         }
 
         alert("Mua vé thành công thành công!");
-        window.location.replace("index.html");   
+        window.location.replace("index.html");
+    }
+
 };
 
 

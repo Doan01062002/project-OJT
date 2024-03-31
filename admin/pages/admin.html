@@ -133,10 +133,11 @@
                 <div class="recentOrders">
                     <div class="cardHeader">
                         <h2>Recent Orders</h2>
+                        <span id="binCustomers" onclick="addBinCustomers()" style="cursor: pointer;" class="material-symbols-outlined btn">delete</span>
                         <a href="#" onclick="addCustomers()" class="btn">Add Customers</a>
                     </div>
 
-                    <table>
+                    <table class="custom-table">
                         <thead>
                             <tr>
                                 <th>STT</th>
@@ -193,7 +194,7 @@
                         <a href="#" onclick="showAddProducts()" class="btn">Add Product</a>
                     </div>
 
-                    <table>
+                    <table class="custom-table">
                         <thead>
                             <tr>
                                 <th>STT</th>
@@ -228,6 +229,34 @@
 
             </div>
 
+            <!-- ================= Bin Customer ================ -->
+
+            <div id="overlay" class="overlay" style="display: none;">
+                <div class="overlay-content">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Ticket Name</th>
+                                <th>Qantity</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="binTableCustomers">
+                            
+                        </tbody>
+                    </table>
+                    <div class="paginationBinCustomers" id="paginationBinCustomers"></div>
+                    <div class="center-hide">
+                        <button onclick="hideOverlay()">Đóng</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -237,6 +266,7 @@
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </body>
 
 </html>
